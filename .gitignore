@@ -1,0 +1,30 @@
+# ---- large generated data: rebuild with the scripts, do not commit ----------
+# 300 cached probability maps, about 580 MB. Rebuild with `python src/predict.py`.
+cache/
+
+# trained weights (12 files of about 94 MB each) live in the original repository
+*.pth
+*.pt
+*.npy
+*.npz
+*.tif
+*.tiff
+
+# ---- python -----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# ---- editors and operating system -------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ---- local only: logs, scratch, the unpublished manuscript ------------------
+*.log
+scratch/
+paper/

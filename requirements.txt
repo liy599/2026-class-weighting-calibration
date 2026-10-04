@@ -1,0 +1,25 @@
+# Packages needed to RUN THE ANALYSIS (experiments 1 to 5, figures, notebook).
+# No GPU is needed for any of this once the probability cache exists.
+#
+# Versions are the ones the results were produced with (Python 3.10).
+# Older or newer releases should work, but these are the tested ones.
+
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.15.3
+matplotlib==3.10.9
+
+# only for the notebook
+jupyterlab==4.6.3
+ipykernel==7.3.0
+nbconvert==7.17.1
+jupytext==1.19.5
+
+# --------------------------------------------------------------------------
+# NOT listed here, because they belong to the original repository:
+# the packages for TRAINING models and for building the cache
+# (predict.py, train_bce_control.py). Install those from
+#   https://github.com/conorosully/sentinel2-vegetation-line
+# Our run used PyTorch 2.12 nightly (cu128). An RTX 50 series card
+# (compute capability sm_120) needs a nightly build; older cards can use a
+# stable PyTorch release.

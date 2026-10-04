@@ -1,0 +1,26 @@
+diff --git a/src/evaluation.py b/src/evaluation.py
+index e038d9b..88b8efc 100644
+--- a/src/evaluation.py
++++ b/src/evaluation.py
+@@ -44,7 +44,7 @@ def get_preds(model,
+               threshold=0.5,
+               batch_size=10, 
+               perm_bands=None,
+-              device='mps'):
++              device='cuda'):
+     
+     """Get model predictions for a given dataloader"""
+     
+diff --git a/src/utils.py b/src/utils.py
+index dabe72f..e77275c 100644
+--- a/src/utils.py
++++ b/src/utils.py
+@@ -341,7 +341,7 @@ def get_model(model_path):
+         in_channels = 4
+ 
+     loss_function = name_split[6].split('.')[0]  # Remove file extension
+-    device = torch.device('mps')  #UPDATE
++    device = torch.device('cuda')  #UPDATE
+ 
+     # Load model
+     if model_type == 'unet':

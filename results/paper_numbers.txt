@@ -1,0 +1,95 @@
+
+==============================================================================
+III  Data
+==============================================================================
+  OK    test images, seen                                        computed    9.0000   paper 9
+  OK    test images, unseen                                      computed   16.0000   paper 16
+  OK    beaches in the seen set                                  computed    4.0000   paper 4
+  OK    training crops                                           computed 8626.0000   paper 8626
+  OK    edge pixels in a training crop (percent)                 computed    0.6018   paper 0.6
+  OK    class weight = 1 / prevalence                            computed  166.1551   paper 166
+  OK    edge pixels in a whole test scene (percent, mean)        computed    0.0501   paper 0.05
+  OK    FOM score of a pixel 1 px from the true line             computed    0.9000   paper 0.9
+  OK    FOM score of a pixel 10 px from the true line            computed    0.0826   paper 0.08
+
+==============================================================================
+V-A  Weighting, not the type of loss
+==============================================================================
+  OK    signed error, seen, BCE (mean of 4 settings)             computed   -0.0013   paper -0.0013
+  OK    signed error, seen, DICE (mean of 4 settings)            computed    0.0142   paper 0.0142
+  OK    signed error, seen, wBCE (mean of 4 settings)            computed    0.1505   paper 0.1505
+  OK    signed error, unseen, BCE                                computed   -0.0167   paper -0.0167
+  OK    signed error, unseen, DICE                               computed   -0.0067   paper -0.0067
+  OK    signed error, unseen, wBCE                               computed    0.1127   paper 0.1127
+  OK    wBCE seen vs unseen (paper: 0.151 vs 0.113)              computed    0.1127   paper 0.113
+  OK    largest wBCE minus BCE gap, seen                         computed    0.2091   paper 0.209
+        found in the frozen, unguided setting; smallest gap 0.107
+  OK    signed error / ECE, wBCE                                 computed    0.9149   paper 0.91
+  OK    signed error / ECE, DICE                                 computed    0.3702   paper 0.37
+  OK    signed error / ECE, BCE                                  computed    0.6390   paper 0.64
+  OK    pooled ECE, BCE                                          computed    0.0028   paper 0.003
+  OK    pooled ECE, DICE                                         computed    0.0368   paper 0.037
+  OK    pooled ECE, wBCE                                         computed    0.1508   paper 0.151
+
+==============================================================================
+V-B  Why it happens
+==============================================================================
+  OK    optimum output for true chance 0.006                     computed    0.5005   paper 0.5
+  OK    optimum output for true chance 0.5                       computed    0.9940   paper 0.994
+  OK    average gap, theory curve vs measured (wBCE)             computed    0.0138   paper 0.014
+  OK    share of the wBCE error explained by the loss            computed    0.9083   paper 0.9
+        median pixels in a middle bin: BCE 3088, DICE 168, wBCE 3795
+  OK    middle bins, BCE vs DICE (paper: about twenty times)     computed   18.3810   paper 20
+  OK    middle bins, wBCE vs DICE                                computed   22.5893   paper 20
+  OK    ECE of DICE relative to BCE                              computed     13.07   paper: more than 10
+
+==============================================================================
+V-C  What the weight buys
+==============================================================================
+  OK    best FOM, BCE                                            computed    0.7638   paper 0.764
+  OK    best FOM, DICE                                           computed    0.7310   paper 0.731
+  OK    best FOM, wBCE                                           computed    0.7369   paper 0.737
+  OK    comparisons won by BCE (of 8)                            computed    7.0000   paper 7
+  OK    wBCE best threshold, lowest                              computed    0.9600   paper 0.96
+  OK    wBCE best threshold, highest                             computed    0.9800   paper 0.98
+  OK    operating window, wBCE                                   computed    0.0765   paper 0.08
+  OK    operating window, DICE                                   computed    0.6760   paper 0.68
+  OK    operating window, BCE                                    computed    0.1939   paper 0.19
+  OK    DICE window relative to wBCE window                      computed      8.83   paper: more than 8
+  OK    BCE best threshold, lowest                               computed    0.0600   paper 0.06
+  OK    BCE best threshold, highest                              computed    0.4200   paper 0.42
+  OK    DICE best threshold, lowest                              computed    0.0200   paper 0.02
+  OK    DICE best threshold, highest                             computed    0.9800   paper 0.98
+
+==============================================================================
+V-D  Robustness and repair after training
+==============================================================================
+  OK    measurement settings tested                              computed   48.0000   paper 48
+  OK    settings where wBCE is the most overconfident            computed   48.0000   paper 48
+  OK    smallest gap over all settings                           computed    0.0634   paper 0.063
+  OK    5 px band, wBCE                                          computed    0.2759   paper 0.276
+  OK    5 px band, DICE                                          computed    0.0278   paper 0.028
+  OK    wBCE ECE on the unseen beach, uncorrected                computed    0.1195   paper 0.12
+  OK      after Platt scaling                                    computed    0.0163   paper 0.016
+  OK      after temperature scaling                              computed    0.1396   paper 0.14
+
+==============================================================================
+V-E  Comparing all twelve models
+==============================================================================
+  OK    best composite (trainable_guided, DICE)                  computed    0.9808   paper 0.98
+  OK    worst composite (frozen_unguided, wBCE)                  computed    0.0814   paper 0.08
+  OK    operating window, trainable guided BCE                   computed    0.2959   paper 0.3
+  OK    smallest seen to unseen drop (trainable_guided, wBCE)    computed    0.0039   paper 0.004
+  OK    guided minus unguided, mean composite                    computed    0.4327   paper 0.43
+  OK    best loss minus worst loss, mean composite               computed    0.2835   paper 0.28
+
+==============================================================================
+Table rows for the paper
+==============================================================================
+  wrote results/paper_table1_rows.tex  (15 lines)
+  wrote results/paper_table2_rows.tex  (3 lines)
+
+==============================================================================
+Summary
+==============================================================================
+  58 of 58 quoted numbers match the manuscript
