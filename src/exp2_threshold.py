@@ -1,5 +1,5 @@
 """
-EXPERIMENT 2 -- What does the class weight actually buy?
+EXPERIMENT 2 -- What does the class weight provide?
 
 `pos_weight = 166` exists to stop the network from predicting "no edge"
 everywhere, which on 0.6% positives would be 99.4% correct and useless.
@@ -15,12 +15,12 @@ An unweighted model trained on 0.6% positives outputs low probabilities
 everywhere, so a fixed 0.5 cut predicts almost nothing -- which looks like
 failure but is only a mis-placed threshold. Sweeping the threshold
 separates the two, and the difference between FOM at 0.5 and FOM at the
-best threshold is exactly what the weight is buying.
+best threshold is exactly what the weight provides.
 
 Caveat, stated here because it constrains the claim: the best threshold is
 chosen on the same data it is evaluated on. It is an upper bound on what
 threshold tuning could achieve, not a deployable recipe. The paper must say
-so -- the honest claim is about what the weight does and does not buy,
+so -- the justified claim is about what the weight does and does not provide,
 not that one should ship a tuned threshold.
 
 Run:

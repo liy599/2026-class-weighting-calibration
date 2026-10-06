@@ -118,7 +118,7 @@ def main():
     quoted("FOM score of a pixel 10 px from the true line", 1 / (1 + a * 100), 0.08, 0.005)
 
     # ------------------------------------------------------------ Section V-A
-    head("V-A  Weighting, not the type of loss")
+    head("V-A  Calibration is determined by class weighting, not by loss type")
     g = per.groupby(["config", "loss", "split"]).sce.mean().reset_index()
     sce = g.groupby(["loss", "split"]).sce.mean().unstack()
     for loss, p_seen in (("BCE", -0.0013), ("DICE", 0.0142), ("wBCE", 0.1505)):
@@ -148,7 +148,7 @@ def main():
     quoted("pooled ECE, wBCE", ece["wBCE"], 0.151, 0.0005)
 
     # ------------------------------------------------------------ Section V-B
-    head("V-B  Why it happens")
+    head("V-B  Analytical explanation of the overconfidence")
     qstar = lambda p: W * p / (1 - p + W * p)
     quoted("optimum output for true chance 0.006", qstar(0.006), 0.50, 0.005)
     quoted("optimum output for true chance 0.5", qstar(0.5), 0.994, 0.0005)
@@ -169,7 +169,7 @@ def main():
     at_least("ECE of DICE relative to BCE", ece["DICE"] / ece["BCE"], 10)
 
     # ------------------------------------------------------------ Section V-C
-    head("V-C  What the weight buys")
+    head("V-C  Effect of class weighting on accuracy and threshold selection")
     by = thr.groupby("loss").agg(fom=("fom_best", "mean"), win=("window_frac", "mean"),
                                  lo=("best_threshold", "min"), hi=("best_threshold", "max"))
     for loss, v in (("BCE", 0.764), ("DICE", 0.731), ("wBCE", 0.737)):
@@ -189,7 +189,7 @@ def main():
     quoted("DICE best threshold, highest", by.loc["DICE", "hi"], 0.98, 0.005)
 
     # ------------------------------------------------------------ Section V-D
-    head("V-D  Robustness and repair after training")
+    head("V-D  Sensitivity analysis and recalibration after training")
     quoted("measurement settings tested", len(sep), 48, 0)
     quoted("settings where wBCE is the most overconfident", int((sep.gap > 0).sum()), 48, 0)
     quoted("smallest gap over all settings", sep.gap.min(), 0.063, 0.0005)
@@ -204,7 +204,7 @@ def main():
     quoted("  after temperature scaling", w["temperature"], 0.140, 0.0006)
 
     # ------------------------------------------------------------ Section V-E
-    head("V-E  Comparing all twelve models")
+    head("V-E  Multicriteria comparison of the twelve models")
     rk = rank.sort_values("rank")
     quoted(f"best composite ({rk.iloc[0].config}, {rk.iloc[0].loss})", rk.iloc[0].composite, 0.98, 0.005)
     quoted(f"worst composite ({rk.iloc[-1].config}, {rk.iloc[-1].loss})", rk.iloc[-1].composite, 0.08, 0.005)

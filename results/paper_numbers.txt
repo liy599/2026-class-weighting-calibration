@@ -13,7 +13,7 @@ III  Data
   OK    FOM score of a pixel 10 px from the true line            computed    0.0826   paper 0.08
 
 ==============================================================================
-V-A  Weighting, not the type of loss
+V-A  Calibration is determined by class weighting, not by loss type
 ==============================================================================
   OK    signed error, seen, BCE (mean of 4 settings)             computed   -0.0013   paper -0.0013
   OK    signed error, seen, DICE (mean of 4 settings)            computed    0.0142   paper 0.0142
@@ -32,7 +32,7 @@ V-A  Weighting, not the type of loss
   OK    pooled ECE, wBCE                                         computed    0.1508   paper 0.151
 
 ==============================================================================
-V-B  Why it happens
+V-B  Analytical explanation of the overconfidence
 ==============================================================================
   OK    optimum output for true chance 0.006                     computed    0.5005   paper 0.5
   OK    optimum output for true chance 0.5                       computed    0.9940   paper 0.994
@@ -44,7 +44,7 @@ V-B  Why it happens
   OK    ECE of DICE relative to BCE                              computed     13.07   paper: more than 10
 
 ==============================================================================
-V-C  What the weight buys
+V-C  Effect of class weighting on accuracy and threshold selection
 ==============================================================================
   OK    best FOM, BCE                                            computed    0.7638   paper 0.764
   OK    best FOM, DICE                                           computed    0.7310   paper 0.731
@@ -62,7 +62,7 @@ V-C  What the weight buys
   OK    DICE best threshold, highest                             computed    0.9800   paper 0.98
 
 ==============================================================================
-V-D  Robustness and repair after training
+V-D  Sensitivity analysis and recalibration after training
 ==============================================================================
   OK    measurement settings tested                              computed   48.0000   paper 48
   OK    settings where wBCE is the most overconfident            computed   48.0000   paper 48
@@ -74,7 +74,7 @@ V-D  Robustness and repair after training
   OK      after temperature scaling                              computed    0.1396   paper 0.14
 
 ==============================================================================
-V-E  Comparing all twelve models
+V-E  Multicriteria comparison of the twelve models
 ==============================================================================
   OK    best composite (trainable_guided, DICE)                  computed    0.9808   paper 0.98
   OK    worst composite (frozen_unguided, wBCE)                  computed    0.0814   paper 0.08

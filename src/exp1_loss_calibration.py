@@ -170,7 +170,7 @@ def verdict(df):
     if abs(bce - dice) < abs(bce - wbce):
         out += [
             "  The control sits with DICE. Both unweighted losses are close to",
-            "  calibrated and the weighted one is the lone outlier, so the",
+            "  calibrated and the weighted one differs from both, so the",
             "  miscalibration tracks the CLASS WEIGHTING, not the loss family.",
             "",
             "  Note the ordering BCE < DICE reproduces the segmentation",

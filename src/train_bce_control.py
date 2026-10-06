@@ -26,8 +26,11 @@ cross-entropy, which is exactly the model trained here.
 sweep loop only ever iterates `["wBCE", "DICE"]`, so these weights were
 never produced. We do not edit Conor's repo; we import from it and run the
 one arm it skipped, with every other setting identical to the original run
--- same seed, same split, same learning-rate sweep -- so the new models are
-directly comparable to the existing eight.
+-- same split (fixed by seed 42), same learning-rate sweep -- so the new models
+are directly comparable to the existing eight. The seed fixes only the split
+into training and validation data: the original code does not seed the initial
+weights or the batch order, and neither do we, so each model is a single
+training run.
 
 Run:
     python train_bce_control.py

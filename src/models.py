@@ -4,7 +4,7 @@ The model inventory, shared by every experiment.
 This study analyses individual models trained with the original author's
 code and data. It deliberately does not build ensembles: every claim it
 makes is a per-model claim, and averaging probability maps would blur the
-loss-function effect that is the whole point.
+loss-function effect under study.
 
 The design under test is a 2x2x3 factorial: two backbone treatments (frozen,
 trainable) crossed with two guidance settings (guided, unguided) and three

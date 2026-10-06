@@ -48,9 +48,9 @@ thresholds for which the figure of merit (FOM) stays within 0.02 of its best.
 - **The loss itself predicts the effect.** Weighted cross entropy with weight
   `w` is minimised at `q = w p / (1 − p + w p)`. This needs no fitted
   parameters and explains about nine tenths of the measured error.
-- **The weight buys nothing.** At its own best threshold unweighted BCE is the
-  most accurate loss, and the weighted model's best threshold (0.96 to 0.98)
-  does not include the default of 0.5.
+- **The weight provides no benefit.** At its own best threshold, unweighted BCE
+  is the most accurate loss, and the best threshold of the weighted model
+  (0.96 to 0.98) does not include the default of 0.5.
 - **The effect is not an artefact of how it is measured.** It holds in all 48
   combinations of bin count, binning rule and distance from the line.
 - **Repair after training:** Platt scaling lowers the ECE of the weighted
@@ -72,8 +72,11 @@ ResNet50 backbone pretrained on BigEarthNet.
 
 The original eight models (`wBCE` and `DICE`) come from the original training
 script. The four `BCE` models are trained by `src/train_bce_control.py` with
-**every other setting identical** (seed 42, 70/30 split, same learning rate
-search, same early stopping). Calibration is measured within 10 pixels of the
+**every other setting identical** (the same 70/30 training and validation
+split, fixed by seed 42, the same learning rate search and the same early
+stopping). The seed fixes only the data split. The initial weights of the new
+layers and the order of the training batches are not seeded, so each model is
+a single training run and the variation between runs is not measured. Calibration is measured within 10 pixels of the
 true line, because a whole image score is dominated by easy background.
 
 ## 🗂 Repository structure
@@ -88,7 +91,7 @@ true line, because a whole image score is dominated by easy background.
 │   ├── metrics.py                 detection and calibration metrics
 │   ├── models.py                  model inventory and loss taxonomy
 │   ├── exp1_loss_calibration.py   the separation and its cause
-│   ├── exp2_threshold.py          what the weight buys: threshold and operating window
+│   ├── exp2_threshold.py          effect of the weight on accuracy and threshold: operating window
 │   ├── exp3_recalibration.py      repair after training: temperature vs Platt scaling
 │   ├── exp4_sensitivity.py        robustness over 48 measurement settings
 │   ├── exp5_model_ranking.py      multi criteria comparison of the twelve models
@@ -213,7 +216,9 @@ each one comes from, and checks it against the value in the manuscript
 (58 numbers; all match). It also writes the rows of the paper's two tables.
 
 Given the same cache, the result tables are reproduced exactly. Training is
-seeded (seed 42), but may not be bit for bit identical on other hardware.
+not deterministic: the seed (42) fixes only the split into training and
+validation data, and not the initial weights or the batch order, so retraining
+gives similar but not identical models.
 
 **Or just look:** `results/` holds every table, and
 `notebooks/model_comparison.ipynb` shows all of them and the four figures

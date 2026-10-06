@@ -87,9 +87,12 @@ design
 # what made the original comparison unable to separate *loss family* from
 # *class weighting*, since wBCE differs from DICE in both at once.
 #
-# All twelve share identical settings otherwise: same random seed (42), same
-# 70/30 train-validation split, same four-rate learning-rate sweep, same early
-# stopping. That identity is what makes the comparison controlled.
+# All twelve share the same 70/30 training and validation split (fixed by seed
+# 42), the same four-rate learning-rate sweep and the same early stopping. The
+# seed fixes only the split: the initial weights of the new layers and the batch
+# order are not seeded, and each model was trained once, so the variation between
+# runs is not measured. Only the loss differs between the models, which is what
+# makes the comparison controlled.
 
 # %% [markdown]
 # ---
@@ -146,7 +149,7 @@ design
 #
 # **wBCE — weighted binary cross-entropy.** BCE with the positive class
 # multiplied by **166** (the reciprocal of the 0.6% prevalence). This forces
-# the model to attend to edges, but it **breaks the proper scoring rule**. For
+# the model to attend to edges, but it **removes the proper scoring rule property**. For
 # weight $w$ and true probability $p$, the loss-minimising output is
 #
 # $$q^{*} = \frac{w \, p}{1 - p + w \, p}$$
@@ -297,16 +300,16 @@ _ = FP.fig_reliability(IMAGES)
 # its bin counts collapse by two orders of magnitude in the middle of the
 # range: DICE barely emits intermediate probabilities at all. Its small
 # *signed* error reflects errors that cancel across a near-binary output, not
-# probabilities that can be believed individually. Its ECE, 0.037, is six
-# times BCE's.
+# probabilities that can be believed individually. Its ECE, 0.037, is more
+# than ten times that of BCE (0.003).
 #
 # This distinction matters for how the recommendation should be worded. The
-# honest three-way statement is: **wBCE is systematically biased, BCE is
+# accurate three-way statement is: **wBCE is systematically biased, BCE is
 # genuinely calibrated, and DICE is neither biased nor truly probabilistic.**
 
 # %% [markdown]
 # ---
-# ## 5. What the class weight actually buys
+# ## 5. Effect of the class weight on accuracy and threshold selection
 #
 # An unweighted model outputs low probabilities everywhere, so it looks
 # useless at a 0.5 cut. Sweeping the threshold separates inability from a
@@ -345,7 +348,7 @@ _ = FP.fig_threshold(threshold)
 # Three things follow.
 #
 # 1. **At its own optimum, unweighted BCE is the most accurate loss.** The
-#    weight does not buy detection accuracy.
+#    weight does not improve detection accuracy.
 # 2. **0.5 is not the right cut for wBCE either.** Its window sits at the top
 #    of the range and does not contain the default at all. The weight moves
 #    where the model fails; it does not stop it failing.
@@ -491,37 +494,36 @@ pd.DataFrame({
 # rate), DICE is not sufficient and BCE with a tuned threshold, or a
 # recalibrated model, is the better basis.
 #
-# ### The weight is a threshold shift baked into the weights, paid for in calibration
+# ### The weight acts as a threshold shift built into the model, at the cost of calibration
 #
-# It buys no accuracy: unweighted BCE beats it at its own optimum in seven of
-# eight comparisons. It buys no threshold convenience either: wBCE's usable
-# window is the narrowest of the three and does not contain 0.5. What it buys
-# is that the failure point moves away from the default cut — an expensive
-# purchase.
+# The weight does not improve accuracy: unweighted BCE is the most accurate loss
+# at its own optimum in seven of eight comparisons. Nor does it provide a usable
+# default threshold: the operating window of wBCE is the narrowest of the three
+# and does not contain 0.5. The weight only moves the useful threshold range
+# away from the default cut, and the cost is paid in calibration.
 #
 # ### Capability and usability are different things
 #
-# BCE wins two criteria outright — the best ceiling (0.950) and the best
-# calibration (0.0031) — yet ranks third. Its operating window is 0.194 and
-# its optimum wanders between 0.06 and 0.42 across configurations, so using it
-# means tuning a threshold per deployment, which requires labels from the
-# deployment site.
+# The trainable, guided BCE model wins two criteria outright, the best ceiling
+# (0.950) and the best calibration (0.0031), yet ranks third. Its operating
+# window is only 0.30. Across all settings the best threshold of BCE ranges from
+# 0.06 to 0.42, so using it means tuning a threshold for each deployment, which
+# requires labels from the deployment site.
 #
-# There is an irony here. The original work rejects classical spectral-index
+# A related point: the original work rejects classical spectral-index
 # methods precisely because *"indices cannot be applied to an unseen beach
 # without being validated with in-situ data"* — that is, because they need
 # per-site threshold tuning. The wBCE model carries the same property.
 #
-# ### Saturation buys robustness, honestly
+# ### Transfer to the unseen beach
 #
-# wBCE wins the *transfer* criterion: the smallest seen→unseen drop of any
-# model, 0.004. Its probabilities are saturated to near-binary, which makes it
-# insensitive to input distribution shift. It trades information for
-# stability. That is a real trade, not merely a defect.
+# A wBCE model wins the *transfer* criterion: the smallest seen to unseen drop
+# of any model, 0.004. We did not test why. One possible reason is that its
+# probabilities are pushed towards high values, but this is not established.
 #
 # ### The guidance band matters more than the loss function
 #
-# Its marginal effect is 0.432, larger than the 0.284 spread between the best
+# Its marginal effect is 0.43, larger than the 0.28 spread between the best
 # and worst loss. Since that band is hand-drawn and static per site, the
 # largest single driver of measured performance is a human annotation — which
 # bears directly on how automatic the framework really is at a new location.

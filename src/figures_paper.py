@@ -245,7 +245,7 @@ def fig_reliability(images, stem="paper_fig2_reliability", quiet=False):
     return _save(fig, stem, quiet)
 
 
-# ----------------------------------------- FIG 3  what the weight buys
+# ----------------------------------------- FIG 3  effect of the weight on the threshold
 
 def fig_threshold(threshold, stem="paper_fig3_threshold", quiet=False):
     """Where each loss is usable on the decision threshold axis.
