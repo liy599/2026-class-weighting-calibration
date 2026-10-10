@@ -31,6 +31,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 
 import config
 import metrics as M
@@ -102,7 +103,12 @@ def _save(fig, stem, quiet=False):
     """
     for ext in ("pdf", "png"):
         p = os.path.join(config.FIGURES, f"{stem}.{ext}")
-        fig.savefig(p, dpi=300, bbox_inches="tight", pad_inches=0.03)
+        # A PDF normally records the moment it was written, so regenerating an
+        # unchanged figure would still change the file and show up in version
+        # control. Dropping the date makes the output reproducible byte for byte.
+        meta = {"CreationDate": None} if ext == "pdf" else None
+        fig.savefig(p, dpi=300, bbox_inches="tight", pad_inches=0.03,
+                    metadata=meta)
     if not quiet:
         print(f"  wrote {stem}.pdf / .png")
     return fig
@@ -253,9 +259,11 @@ def fig_threshold(threshold, stem="paper_fig3_threshold", quiet=False):
     Include at width = \\columnwidth.
 
     The bar is the operating window: the span over which FOM stays within
-    0.02 of that loss's own best. The marker is the optimum. The reader's
-    question is 'does the default cut fall inside the bar', which is a
-    position judgement.
+    0.02 of that loss's own best. The marker is the optimum, the dashed line is
+    the default cut, and the percentage on the right is the width of the bar
+    as a share of all thresholds. The reader's question is 'does the default
+    cut fall inside the bar', which is a position judgement. A legend names
+    the bar, the marker and the dashed line.
     """
     d = (threshold.groupby("loss")
          .agg(lo=("window_lo", "mean"), hi=("window_hi", "mean"),
@@ -279,19 +287,28 @@ def fig_threshold(threshold, stem="paper_fig3_threshold", quiet=False):
                     textcoords="offset points", annotation_clip=False,
                     va="center", fontsize=9, color=INK2)
 
-    ax.annotate("usable\nrange", xy=(1.0, 1.0),
+    ax.annotate("window\nwidth", xy=(1.0, 1.0),
                 xycoords=("data", "axes fraction"),
                 xytext=(6, 1), textcoords="offset points",
                 annotation_clip=False, va="bottom", fontsize=8, color=MUTED)
 
-    # Above the plot, not below it: the space under the axes carries the tick
-    # labels and the axis title, and the top margin is otherwise empty.
     ax.axvline(0.5, color=INK2, lw=1.1, ls=(0, (4, 3)), zorder=3)
-    ax.annotate("default cut 0.5", xy=(0.5, 1.0),
-                xycoords=("data", "axes fraction"),
-                xytext=(0, 4), textcoords="offset points",
-                annotation_clip=False, fontsize=8.5, color=INK2,
-                ha="center", va="bottom")
+
+    # The legend names every mark in the figure. Its handles are neutral grey:
+    # colour and marker shape already tie each bar to its loss through the row
+    # label, and repeating them here would suggest the legend is about one loss.
+    handles = [
+        Patch(facecolor="#9a9892", alpha=0.35, edgecolor="none",
+              label="Operating window"),
+        Line2D([], [], color="#4a4945", marker="o", ls="none", ms=6.5,
+               markeredgecolor=SURFACE, markeredgewidth=1.0,
+               label="Best threshold"),
+        Line2D([], [], color=INK2, lw=1.1, ls=(0, (4, 3)),
+               label="Default (0.5)"),
+    ]
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.27),
+              ncol=3, fontsize=7.8, handletextpad=0.4, columnspacing=1.0,
+              borderaxespad=0.0)
 
     ax.set_yticks(ys)
     ax.set_yticklabels(ORDER, fontsize=9.5, color=INK2)

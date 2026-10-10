@@ -1,4 +1,4 @@
-# Extra Weight on Rare Edge Pixels Makes Coastal Vegetation Line Models Overconfident
+# A Common Training Technique Makes Satellite Coastal Mapping Models Overconfident
 
 [![Paper](https://img.shields.io/badge/Paper-under%20review-lightgrey)](#-citation)
 [![Dataset](https://img.shields.io/badge/Dataset-SIVE%20(Zenodo)-blue)](https://zenodo.org/records/17122999)
@@ -261,7 +261,7 @@ this entry will be updated):
 
 ```bibtex
 @misc{li2026extraweight,
-  title  = {Extra Weight on Rare Edge Pixels Makes Coastal Vegetation Line Models Overconfident},
+  title  = {A Common Training Technique Makes Satellite Coastal Mapping Models Overconfident},
   author = {Li, Yukun and Dey, Prasanjit and Pakrashi, Arjun and Dev, Soumyabrata},
   year   = {2026},
   note   = {Manuscript under review}
